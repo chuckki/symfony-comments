@@ -1,19 +1,6 @@
 {
-    "name": "contao/comments-bundle",
+    "name": "chuckki/symfony-comments",
     "type": "contao-bundle",
-    "description": "Adds comments functionality to Contao",
-    "homepage": "https://contao.org",
-    "license": "LGPL-3.0-or-later",
-    "authors": [
-        {
-            "name": "Leo Feyer",
-            "homepage": "https://github.com/leofeyer"
-        },
-        {
-            "name": "Contao Community",
-            "homepage": "https://contao.org/contributors"
-        }
-    ],
     "require": {
         "php": "^7.2",
         "contao/core-bundle": "self.version",
@@ -50,11 +37,5 @@
             "src/Resources/contao/languages/",
             "src/Resources/contao/templates/"
         ]
-    },
-    "support": {
-        "issues": "https://github.com/contao/contao/issues",
-        "forum": "https://community.contao.org",
-        "source": "https://github.com/contao/comments-bundle",
-        "docs": "https://docs.contao.org"
     }
 }
