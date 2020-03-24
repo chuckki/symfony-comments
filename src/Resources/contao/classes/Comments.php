@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use App\Entity\Student;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\OptIn\OptIn;
 use FOS\HttpCache\ResponseTagger;
@@ -180,33 +181,8 @@ class Comments extends Frontend
 			return;
 		}
 
-		// Form fields
-		$arrFields = array
-		(
-			'name' => array
-			(
-				'name'      => 'name',
-				'label'     => $GLOBALS['TL_LANG']['MSC']['com_name'],
-				'value'     => trim($this->User->firstname . ' ' . $this->User->lastname),
-				'inputType' => 'text',
-				'eval'      => array('mandatory'=>true, 'maxlength'=>64)
-			),
-			'email' => array
-			(
-				'name'      => 'email',
-				'label'     => $GLOBALS['TL_LANG']['MSC']['com_email'],
-				'value'     => $this->User->email,
-				'inputType' => 'text',
-				'eval'      => array('rgxp'=>'email', 'mandatory'=>true, 'maxlength'=>255, 'decodeEntities'=>true)
-			),
-			'website' => array
-			(
-				'name'      => 'website',
-				'label'     => $GLOBALS['TL_LANG']['MSC']['com_website'],
-				'inputType' => 'text',
-				'eval'      => array('rgxp'=>'url', 'maxlength'=>128, 'decodeEntities'=>true)
-			)
-		);
+		/** @var Student $user */
+		$user = System::getContainer()->get('security.token_storage')->getToken()->getUser();
 
 		// Captcha
 		if (!$objConfig->disableCaptcha)
@@ -276,6 +252,7 @@ class Comments extends Frontend
 			$arrWidgets[$arrField['name']] = $objWidget;
 		}
 
+		$objTemplate->userName = $user->getUsername();
 		$objTemplate->fields = $arrWidgets;
 		$objTemplate->submit = $GLOBALS['TL_LANG']['MSC']['com_submit'];
 		$objTemplate->messages = ''; // Deprecated since Contao 4.0, to be removed in Contao 5.0
@@ -304,13 +281,6 @@ class Comments extends Frontend
 		// Store the comment
 		if (!$doNotSubmit && Input::post('FORM_SUBMIT') == $strFormId)
 		{
-			$strWebsite = $arrWidgets['website']->value;
-
-			// Add http:// to the website
-			if (($strWebsite != '') && !preg_match('@^(https?://|ftp://|mailto:|#)@i', $strWebsite))
-			{
-				$strWebsite = 'http://' . $strWebsite;
-			}
 
 			// Do not parse any tags in the comment
 			$strComment = StringUtil::specialchars(trim($arrWidgets['comment']->value));
@@ -328,13 +298,6 @@ class Comments extends Frontend
 			// Prevent cross-site request forgeries
 			$strComment = preg_replace('/(href|src|on[a-z]+)="[^"]*(contao\/main\.php|typolight\/main\.php|javascript|vbscri?pt|script|alert|document|cookie|window)[^"]*"+/i', '$1="#"', $strComment);
 
-			$intMember = 0;
-
-			if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
-			{
-				$intMember = FrontendUser::getInstance()->id;
-			}
-
 			$time = time();
 
 			// Prepare the record
@@ -343,10 +306,10 @@ class Comments extends Frontend
 				'tstamp'    => $time,
 				'source'    => $strSource,
 				'parent'    => $intParent,
-				'name'      => $arrWidgets['name']->value,
-				'email'     => $arrWidgets['email']->value,
-				'website'   => $strWebsite,
-				'member'    => $intMember,
+				'name'      => $user->getUsername(),
+				'email'     => $user->getEmail(),
+				'website'   => '',
+				'member'    => $user->getId(),
 				'comment'   => $this->convertLineFeeds($strComment),
 				'ip'        => Environment::get('ip'),
 				'date'      => $time,
