@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use App\Entity\Student;
+
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\OptIn\OptIn;
 use FOS\HttpCache\ResponseTagger;
@@ -252,7 +252,7 @@ class Comments extends Frontend
 			$arrWidgets[$arrField['name']] = $objWidget;
 		}
 
-		$objTemplate->userName = $user->getUsername();
+		$objTemplate->userName = $this->User->username;
 		$objTemplate->fields = $arrWidgets;
 		$objTemplate->submit = $GLOBALS['TL_LANG']['MSC']['com_submit'];
 		$objTemplate->messages = ''; // Deprecated since Contao 4.0, to be removed in Contao 5.0
@@ -298,6 +298,13 @@ class Comments extends Frontend
 			// Prevent cross-site request forgeries
 			$strComment = preg_replace('/(href|src|on[a-z]+)="[^"]*(contao\/main\.php|typolight\/main\.php|javascript|vbscri?pt|script|alert|document|cookie|window)[^"]*"+/i', '$1="#"', $strComment);
 
+			$intMember = 0;
+
+			if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+			{
+				$intMember = FrontendUser::getInstance()->id;
+			}
+
 			$time = time();
 
 			// Prepare the record
@@ -306,10 +313,10 @@ class Comments extends Frontend
 				'tstamp'    => $time,
 				'source'    => $strSource,
 				'parent'    => $intParent,
-				'name'      => $user->getUsername(),
-				'email'     => $user->getEmail(),
+				'name'      => $this->User->username,
+				'email'     => $this->User->email,
 				'website'   => '',
-				'member'    => $user->getId(),
+				'member'    => $intMember,
 				'comment'   => $this->convertLineFeeds($strComment),
 				'ip'        => Environment::get('ip'),
 				'date'      => $time,
