@@ -112,6 +112,8 @@ class Comments extends Frontend
 				$objPartial->comment = StringUtil::toHtml5($objComments->comment);
 				$objPartial->comment = trim(str_replace(array('{{', '}}'), array('&#123;&#123;', '&#125;&#125;'), $objPartial->comment));
 
+				$objPartial->comment = $this->addPlayerLink($objPartial->comment);
+
 				$objPartial->datim = Date::parse($objPage->datimFormat, $objComments->date);
 				$objPartial->date = Date::parse($objPage->dateFormat, $objComments->date);
 				$objPartial->class = (($count < 1) ? ' first' : '') . (($count >= ($total - 1)) ? ' last' : '') . (($count % 2 == 0) ? ' even' : ' odd');
@@ -149,6 +151,32 @@ class Comments extends Frontend
 		// Add a form to create new comments
 		$this->renderCommentForm($objTemplate, $objConfig, $strSource, $intParent, $varNotifies);
 	}
+
+    private function addPlayerLink(string $txt): string
+    {
+        $matches = array();
+        $time    = preg_match_all('/(?:([01]?\d|2[0-3]):)?([0-5]?\d):?([0-5]?\d)/', $txt, $matches);
+        foreach ($matches[0] as $match) {
+            $second = 0;
+            $stamp  = explode(':', $match);
+            switch (count($stamp)) {
+                case 1:
+                    $second = $stamp[0];
+                    break;
+                case 2:
+                    $second = $stamp[1] + $stamp[0] * 60;
+                    break;
+                case 3:
+                    $second = $stamp[2] + $stamp[1] * 60 + $stamp[0] * 60;
+                    break;
+            }
+            $playerLink =
+                ' <a href="#" onclick="player.currentTime = '.$second.'; player.play();return false;">'.$match.'</a>';
+            $txt        = str_replace($match, $playerLink, $txt);
+        }
+
+        return $txt;
+    }
 
 	/**
 	 * Add a form to create new comments
