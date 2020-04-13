@@ -7,8 +7,9 @@
     <?php if ($this->confirm): ?>
       <p class="tl_confirm"><?= $this->confirm ?></p>
     <?php elseif ($this->allowComments): ?>
-      <form id="<?= $this->formId ?>" method="post">
+      <form id="<?= $this->formId ?>" method="post" class="comment-form">
         <div class="formbody">
+          <button type="button" id="comment-help" class="btn btn-sm btn-outline-primary" data-toggle="popover" data-placement="left" title="Hilfe für Kommentare" data-content="Wenn Sie sich auf einen bestimmten Moment im Video beziehen möchten, können Sie mit der Angabe der Zeitstempels einen direkten Link erzeugen. Bsp. 3:15">Hilfe</button>
           <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
           <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
           <?php foreach ($this->fields as $field): ?>
@@ -19,6 +20,9 @@
           </div>
         </div>
       </form>
+      <script>
+      $(function () {$('[data-toggle="popover"]').popover()})
+      </script>
     <?php endif; ?>
   <?php endif; ?>
 </div>
