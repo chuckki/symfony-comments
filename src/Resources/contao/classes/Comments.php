@@ -152,24 +152,34 @@ class Comments extends Frontend
 		$this->renderCommentForm($objTemplate, $objConfig, $strSource, $intParent, $varNotifies);
 	}
 
+    static function computeTimestampToSeconds($ts): int
+    {
+        $second = 0;
+        $stamp  = explode(':', $ts);
+        switch (count($stamp)) {
+            case 1:
+                $second = $stamp[0];
+                break;
+            case 2:
+                if(($stamp[0]+0) < 60){
+                    $second = $stamp[1] + $stamp[0] * 60;
+                }
+                break;
+            case 3:
+                if($stamp[0] < 60 && $stamp[1] < 60 ) {
+                    $second = $stamp[2] + $stamp[1] * 60 + $stamp[0] * 60;
+                }
+                break;
+        }
+        return $second;
+    }
+
     private function addPlayerLink(string $txt): string
     {
         $matches = array();
         $time    = preg_match_all('/(?:([01]?\d|2[0-3]):)?([0-5]?\d):?([0-5]?\d)/', $txt, $matches);
         foreach ($matches[0] as $match) {
-            $second = 0;
-            $stamp  = explode(':', $match);
-            switch (count($stamp)) {
-                case 1:
-                    $second = $stamp[0];
-                    break;
-                case 2:
-                    $second = $stamp[1] + $stamp[0] * 60;
-                    break;
-                case 3:
-                    $second = $stamp[2] + $stamp[1] * 60 + $stamp[0] * 60;
-                    break;
-            }
+            $second = self::computeTimestampToSeconds($match);
             $playerLink =
                 ' <a href="#" onclick="player.currentTime = '.$second.'; player.play();return false;">'.$match.'</a>';
             $txt        = str_replace($match, $playerLink, $txt);
