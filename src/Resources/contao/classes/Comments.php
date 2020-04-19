@@ -269,7 +269,7 @@ class Comments extends Frontend
 			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name'], $arrField['value']));
 
-			if($arrField['name'] === 'comment'){
+			if($arrField['name'] === 'comment' && $objTemplate->getData()['type'] != 'newsreader'){
 			    $objWidget->addAttributes(array('placeholder' => 'Wenn Sie sich auf einen bestimmten Moment im Video beziehen möchten, können Sie mit der Angabe der Zeitstempels einen direkten Link erzeugen. Bsp. 3:15'));
             }
 
