@@ -270,7 +270,7 @@ class Comments extends Frontend
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name'], $arrField['value']));
 
 			if($arrField['name'] === 'comment' && $objTemplate->getData()['type'] != 'newsreader'){
-			    $objWidget->addAttributes(array('placeholder' => 'Wenn Sie sich auf einen bestimmten Moment im Video beziehen möchten, können Sie mit der Angabe der Zeitstempels einen direkten Link erzeugen. Bsp. 3:15'));
+			    $objWidget->addAttributes(array('placeholder' => 'Wenn Sie sich auf einen bestimmten Moment im Video beziehen möchten, können Sie mit der Angabe des Zeitstempels einen direkten Link erzeugen. Mit der Eingabe des Textes \'3:15\' erzeugen Sie beispielsweise einen Link zur Stelle im Video bei 3 Minuten und 15 Sekunden.'));
             }
 
 			// Append the parent ID to prevent duplicate IDs (see #1493)
