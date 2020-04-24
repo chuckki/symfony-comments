@@ -352,13 +352,20 @@ class Comments extends Frontend
 				$intMember = FrontendUser::getInstance()->id;
 			}
 
+            $first   = explode('@', $this->User->email);
+            $preMail = explode('.', $first[0]);
+            $cname   = '';
+            foreach ($preMail as $mailPart) {
+                $cname .= mb_strtoupper(substr($mailPart, 0, 1)).'.';
+            }
+
 			// Prepare the record
 			$arrSet = array
 			(
 				'tstamp'    => $time,
 				'source'    => $strSource,
 				'parent'    => $intParent,
-				'name'      => $this->User->username,
+				'name'      => $cname,
 				'email'     => $this->User->email,
 				'website'   => '',
 				'member'    => $intMember,
