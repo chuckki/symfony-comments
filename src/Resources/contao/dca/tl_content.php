@@ -9,7 +9,7 @@
  */
 
 // Add palette to tl_content
-$GLOBALS['TL_DCA']['tl_content']['palettes']['comments'] = '{type_legend},type,headline;{comment_legend},com_order,com_perPage,com_moderate,com_bbcode,com_requireLogin,com_disableCaptcha;{template_legend:hide},com_template,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop';
+$GLOBALS['TL_DCA']['tl_content']['palettes']['comments'] = '{type_legend},type,headline;{comment_legend},com_order,com_perPage,com_moderate,com_bbcode,com_requireLogin,com_disableCaptcha,com_placeholder;{template_legend:hide},com_template,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop';
 
 // Add fields to tl_content
 $GLOBALS['TL_DCA']['tl_content']['fields']['com_order'] = array
@@ -73,3 +73,14 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['com_template'] = array
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 	'sql'                     => "varchar(64) NOT NULL default ''"
 );
+
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['com_placeholder'] = array
+(
+	'label'                   => ['Placeholder','Wenn leer wird Video-Placeholder verwendet'],
+    'exclude'                 => true,
+    'inputType'               => 'textarea',
+	'eval'                    => array('tl_class'=>'w50'),
+    'sql'                     => "text NULL"
+);
+

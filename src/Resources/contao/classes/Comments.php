@@ -273,6 +273,10 @@ class Comments extends Frontend
 			    $objWidget->addAttributes(array('placeholder' => 'Wenn Sie sich auf einen bestimmten Moment im Video beziehen möchten, können Sie mit der Angabe des Zeitstempels einen direkten Link erzeugen. Mit der Eingabe des Textes \'3:15\' erzeugen Sie beispielsweise einen Link zur Stelle im Video bei 3 Minuten und 15 Sekunden.'));
             }
 
+			if(!empty($objConfig->placeholder)){
+			    $objWidget->addAttributes(array('placeholder' => $objConfig->placeholder));
+            }
+
 			// Append the parent ID to prevent duplicate IDs (see #1493)
 			$objWidget->id .= '_' . $intParent;
 

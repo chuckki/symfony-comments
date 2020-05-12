@@ -61,6 +61,7 @@ class ContentComments extends ContentElement
 		$objConfig->disableCaptcha = $this->com_disableCaptcha;
 		$objConfig->bbcode = $this->com_bbcode;
 		$objConfig->moderate = $this->com_moderate;
+		$objConfig->placeholder = $this->com_placeholder;
 
 		$this->Comments->addCommentsToTemplate($this->Template, $objConfig, 'tl_content', $this->id, $GLOBALS['TL_ADMIN_EMAIL']);
 	}
